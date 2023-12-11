@@ -6,13 +6,15 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Student
 from .serializers import UserSerializer, StudentSerializer
+from drf_yasg.utils import swagger_auto_schema
+
+from .yasg_scheme import registration_post_scheme, registration_post_request
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        print(user)
         # staff = Student.objects.filter(user=user)
         # token['username'] = user.username
 
@@ -23,13 +25,16 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data)  # Выводим данные в консоль
         response = super().post(request, *args, **kwargs)
-        print(response.data)  # Выводим ответ в консоль
         return response
 
 
 class RegistrationAPIView(APIView):
+    @swagger_auto_schema(
+        operation_summary="Get doctors list (web)",
+        responses={200: registration_post_scheme},
+        request_body=registration_post_request
+    )
     def post(self, request, *args, **kwargs):
         user_data = request.data.get('user', {})
         user_serializer = UserSerializer(data=user_data)
