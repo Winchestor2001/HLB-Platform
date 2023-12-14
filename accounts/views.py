@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Student
 from .serializers import UserSerializer, StudentSerializer
@@ -15,8 +16,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # staff = Student.objects.filter(user=user)
-        # token['username'] = user.username
+        student = Student.objects.filter(user=user)
+        if student.exists():
+            token['full_name'] = student[0].full_name
+            token['phone_number'] = student[0].full_name
 
         return token
 
@@ -46,7 +49,13 @@ class RegistrationAPIView(APIView):
 
             if student_serializer.is_valid():
                 student_serializer.save()
-                return Response(student_serializer.data, status=status.HTTP_201_CREATED)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                response_data = {
+                    'access_token': access_token,
+                    'refresh_token': str(refresh),
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response({'message': 'Invalid student data', 'errors': student_serializer.errors},
                                 status=status.HTTP_400_BAD_REQUEST)
