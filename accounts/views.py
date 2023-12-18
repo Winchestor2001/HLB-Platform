@@ -48,6 +48,8 @@ class RegistrationAPIView(APIView):
             student_serializer = StudentSerializer(data=student_data)
 
             if student_serializer.is_valid():
+                user.set_password(user_data.get('password'))
+                user.save()
                 student_serializer.save()
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
