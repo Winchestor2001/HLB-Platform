@@ -38,9 +38,9 @@ class Article(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     context = models.TextField()
-    file = models.FileField(upload_to='article/file/')
-    video = models.FileField(upload_to='article/video/')
-    image = models.FileField(upload_to='article/image/')
+    file = models.FileField(upload_to='article/file/', blank=True, null=True)
+    video = models.FileField(upload_to='article/video/', blank=True, null=True)
+    image = models.FileField(upload_to='article/image/', blank=True, null=True)
     quiz = models.ManyToManyField(Quiz)
     read_time = models.BigIntegerField()
 
