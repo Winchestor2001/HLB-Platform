@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('api/accounts/', include('accounts.urls')),
+    path('api/student/', include('student_platform.urls')),
 
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

@@ -34,7 +34,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class RegistrationAPIView(APIView):
     @swagger_auto_schema(
-        operation_summary="Get doctors list (web)",
         responses={200: registration_post_scheme},
         request_body=registration_post_request
     )
