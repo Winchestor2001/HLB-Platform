@@ -1,15 +1,19 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .models import Course, Lesson, Article
+from .models import Course, Lesson, Article, Quiz
 
 
 class ArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = ['id', 'title']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['quiz_score'] = sum(list(instance.quiz.values_list('score', flat=True)))
+        return data
 
 
 class LessonSerializer(ModelSerializer):
-
     class Meta:
         model = Lesson
         fields = ['id', 'course', 'number', 'title', 'price', 'paid']
