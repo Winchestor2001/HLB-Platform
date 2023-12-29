@@ -18,7 +18,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         student = Student.objects.filter(user=user)
         if student.exists():
-            token['full_name'] = student[0].full_name
+            token['student_id'] = student[0].id
+            token['phone_number'] = student[0].full_name
             token['phone_number'] = student[0].full_name
 
         return token

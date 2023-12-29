@@ -1,5 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .models import Course, Lesson, Article, Quiz
+
+from accounts.models import Student
+from .models import Course, Lesson, Article, Quiz, StudentCourse, StudentLesson, StudentArticle
 
 
 class ArticleSerializer(ModelSerializer):
@@ -34,8 +36,35 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'title', 'poster_image', 'total_lessons']
+        fields = ['id', 'slug', 'title', 'poster_image', 'total_lessons']
 
     @staticmethod
     def get_total_lessons(obj):
         return obj.lesson_set.count()
+
+
+class StudentAddCourseSerializer(ModelSerializer):
+
+    class Meta:
+        model = StudentCourse
+        fields = '__all__'
+
+    def create(self, validated_data):
+        student = validated_data['student']
+        course = validated_data['course']
+        lessons = Lesson.objects.filter(course=course)
+        for lesson in lessons:
+            student_lesson = StudentLesson.objects.create(
+                lesson=lesson.course, student=student
+            )
+
+            if lesson.number == 1:
+                lock = True
+            else:
+                lock = False
+
+            StudentArticle.objects.create(
+                article=student_lesson, student=student, lock=lock
+            )
+
+        return super(StudentAddCourseSerializer, self).create(validated_data)

@@ -1,7 +1,9 @@
 from django.db import models
+from accounts.models import Student
 
 
 class Course(models.Model):
+    slug = models.SlugField(blank=True, null=True, unique=True)
     title = models.CharField(max_length=200)
     poster_image = models.ImageField(upload_to='course/')
 
@@ -46,4 +48,31 @@ class Article(models.Model):
 
     def __str__(self):
         return f"{self.lesson} - {self.title}"
+
+
+class StudentCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug')
+
+    def __str__(self):
+        return f"{self.student} - {self.course}"
+
+
+class StudentLesson(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    course = models.ForeignKey(StudentCourse, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.lesson}"
+
+
+class StudentArticle(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True)
+    lock = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.article}"
 

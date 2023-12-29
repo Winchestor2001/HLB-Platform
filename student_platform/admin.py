@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Course, Lesson, Article, Quiz
+from .models import Course, Lesson, Article, Quiz, StudentCourse
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
     list_display = ['id', 'title']
     list_display_links = ['title']
 
@@ -25,3 +26,8 @@ class QuizAdmin(admin.ModelAdmin):
     list_display = ['question', 'score']
     list_display_links = ['question']
 
+
+@admin.register(StudentCourse)
+class StudentCourseAdmin(admin.ModelAdmin):
+    list_display = ['student', 'course']
+    list_display_links = ['student']
