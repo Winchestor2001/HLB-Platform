@@ -51,6 +51,7 @@ class Article(models.Model):
 
 
 class StudentCourse(models.Model):
+    slug = models.SlugField(blank=True, null=True, unique=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug')
 
@@ -70,7 +71,7 @@ class StudentLesson(models.Model):
 class StudentArticle(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True)
+    lesson = models.ForeignKey(StudentLesson, on_delete=models.CASCADE, null=True)
     lock = models.BooleanField(default=True)
 
     def __str__(self):

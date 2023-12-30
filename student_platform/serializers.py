@@ -53,9 +53,13 @@ class StudentAddCourseSerializer(ModelSerializer):
         student = validated_data['student']
         course = validated_data['course']
         lessons = Lesson.objects.filter(course=course)
+        student_course = StudentCourse.objects.create(
+                student=student, course=course, slug=course.slug
+        )
         for lesson in lessons:
+            article = Article.objects.get(lesson=lesson)
             student_lesson = StudentLesson.objects.create(
-                lesson=lesson.course, student=student
+                course=student_course, student=student, lesson=lesson
             )
 
             if lesson.number == 1:
@@ -64,7 +68,7 @@ class StudentAddCourseSerializer(ModelSerializer):
                 lock = False
 
             StudentArticle.objects.create(
-                article=student_lesson, student=student, lock=lock
+                article=article, student=student, lock=lock, lesson=student_lesson
             )
 
-        return super(StudentAddCourseSerializer, self).create(validated_data)
+        return validated_data
