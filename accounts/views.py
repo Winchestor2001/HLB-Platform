@@ -19,8 +19,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         student = Student.objects.filter(user=user)
         if student.exists():
             token['student_id'] = student[0].id
-            token['phone_number'] = student[0].full_name
-            token['phone_number'] = student[0].full_name
+            token['full_name'] = student[0].full_name
 
         return token
 
@@ -50,8 +49,11 @@ class RegistrationAPIView(APIView):
             if student_serializer.is_valid():
                 user.set_password(user_data.get('password'))
                 user.save()
-                student_serializer.save()
+                student_instance = student_serializer.save()
                 refresh = RefreshToken.for_user(user)
+                refresh['student_id'] = student_instance.id
+                refresh['full_name'] = student_instance.full_name
+
                 access_token = str(refresh.access_token)
                 response_data = {
                     'access_token': access_token,
