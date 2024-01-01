@@ -27,12 +27,7 @@ class LessonSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-
-        user = self.context['request'].user
-        student_course = instance.course.studentcourse_set.filter(student=user)
-
         data['lesson_articles'] = self.get_lesson_articles(instance)
-        data['is_visible'] = student_course.exists()
         return data
 
 
@@ -49,7 +44,6 @@ class CourseSerializer(ModelSerializer):
 
 
 class StudentAddCourseSerializer(ModelSerializer):
-
     class Meta:
         model = StudentCourse
         fields = '__all__'
@@ -77,3 +71,53 @@ class StudentAddCourseSerializer(ModelSerializer):
                 )
 
         return student_course
+
+
+class StudentCoursesSerializer(ModelSerializer):
+    class Meta:
+        model = StudentCourse
+        fields = '__all__'
+
+    @staticmethod
+    def count_articles(obj):
+        lessons = obj.studentlesson_set.all()
+        finished_articles = 0
+        total_articles = 0
+        for lesson in lessons:
+            finished_articles += lesson.studentarticle_set.filter(finished=True).count()
+            total_articles += lesson.studentarticle_set.all().count()
+
+        return finished_articles * 100 // total_articles
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        data = super().to_representation(instance)
+        data['poster_image'] = request.build_absolute_uri(instance.course.poster_image.url)
+        data['slug'] = instance.course.slug
+        data['title'] = instance.course.title
+        data['statistic_bar'] = self.count_articles(instance)
+        return data
+
+
+class StudentArticleSerializer(ModelSerializer):
+    class Meta:
+        model = StudentArticle
+        fields = '__all__'
+
+
+class StudentLessonSerializer(ModelSerializer):
+    # lesson = LessonSerializer()
+
+    class Meta:
+        model = StudentLesson
+        fields = '__all__'
+
+    @staticmethod
+    def get_lesson_articles(obj):
+        result = StudentArticleSerializer(instance=obj.studentarticle_set.all(), many=True)
+        return result.data
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['lesson_articles'] = self.get_lesson_articles(instance)
+        return data

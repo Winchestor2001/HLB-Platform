@@ -3,6 +3,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from core.settings import DOMAIN
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -11,7 +12,7 @@ schema_view = get_schema_view(
       description="Api testing",
       license=openapi.License(name="BSD License"),
    ),
-   url='https://cfff-92-63-204-119.ngrok-free.app/api/',
+   url=f'{DOMAIN}/api/',
    public=True,
    permission_classes=(permissions.AllowAny,),
 )
