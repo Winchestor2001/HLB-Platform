@@ -27,7 +27,12 @@ class LessonSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+
+        user = self.context['request'].user
+        student_course = instance.course.studentcourse_set.filter(student=user)
+
         data['lesson_articles'] = self.get_lesson_articles(instance)
+        data['is_visible'] = student_course.exists()
         return data
 
 
@@ -52,19 +57,23 @@ class StudentAddCourseSerializer(ModelSerializer):
     def create(self, validated_data):
         student = validated_data['student']
         course = validated_data['course']
+        student_course = super(StudentAddCourseSerializer, self).create(validated_data)
         lessons = Lesson.objects.filter(course=course)
         for lesson in lessons:
             student_lesson = StudentLesson.objects.create(
-                lesson=lesson.course, student=student
+                lesson=lesson, student=student, course=student_course
             )
 
-            if lesson.number == 1:
-                lock = True
-            else:
-                lock = False
+            articles = Article.objects.filter(lesson=lesson)
 
-            StudentArticle.objects.create(
-                article=student_lesson, student=student, lock=lock
-            )
+            for article in articles:
+                if article.number == 1:
+                    lock = True
+                else:
+                    lock = False
 
-        return super(StudentAddCourseSerializer, self).create(validated_data)
+                StudentArticle.objects.create(
+                    lesson=student_lesson, student=student, lock=lock, article=article
+                )
+
+        return student_course
