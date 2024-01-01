@@ -37,6 +37,7 @@ class Quiz(models.Model):
 
 
 class Article(models.Model):
+    number = models.IntegerField(default=0)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     context = models.TextField()
@@ -51,9 +52,8 @@ class Article(models.Model):
 
 
 class StudentCourse(models.Model):
-    slug = models.SlugField(blank=True, null=True, unique=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug', unique=True)
 
     def __str__(self):
         return f"{self.student} - {self.course}"
