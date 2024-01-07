@@ -1,8 +1,8 @@
-from .models import Course, Lesson, StudentCourse, StudentLesson
+from .models import Course, Lesson, StudentCourse, StudentLesson, Article
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
-    StudentLessonSerializer
+    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -28,7 +28,7 @@ class StudentAddCourseView(CreateAPIView):
 
 
 class StudentCoursesView(ListAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentCoursesSerializer
 
     def get_queryset(self):
@@ -43,4 +43,16 @@ class StudentLessonAPIView(ListAPIView):
 
     def get_queryset(self):
         course_id = self.kwargs['course_slug']
-        return StudentLesson.objects.filter(course__course__slug=course_id)
+        return StudentLesson.objects.filter(course__slug=course_id)
+
+
+class StudentArticleAPIView(RetrieveAPIView):
+    serializer_class = StudentArticleSerializer
+    lookup_field = 'id'
+    queryset = Article.objects.all()
+    # permission_classes = [IsAuthenticated]
+
+    # def get_queryset(self):
+    #     article_id = self.kwargs['article_id']
+    #     return Article.objects.get(pk=article_id)
+

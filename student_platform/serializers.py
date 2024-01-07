@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from accounts.models import Student
 from .models import Course, Lesson, Article, Quiz, StudentCourse, StudentLesson, StudentArticle
+from .utils import filter_student_lessons
 
 
 class ArticleSerializer(ModelSerializer):
@@ -51,26 +52,25 @@ class StudentAddCourseSerializer(ModelSerializer):
     def create(self, validated_data):
         student = validated_data['student']
         course = validated_data['course']
-        student_course = super(StudentAddCourseSerializer, self).create(validated_data)
         lessons = Lesson.objects.filter(course=course)
         for lesson in lessons:
-            student_lesson = StudentLesson.objects.create(
-                lesson=lesson, student=student, course=student_course
+            StudentLesson.objects.create(
+                lesson=lesson, student=student, course=course
             )
 
             articles = Article.objects.filter(lesson=lesson)
 
             for article in articles:
-                if article.number == 1:
+                if article.number != 1:
                     lock = True
                 else:
                     lock = False
 
                 StudentArticle.objects.create(
-                    lesson=student_lesson, student=student, lock=lock, article=article
+                    lesson=lesson, student=student, lock=lock, article=article
                 )
 
-        return student_course
+        return super(StudentAddCourseSerializer, self).create(validated_data)
 
 
 class StudentCoursesSerializer(ModelSerializer):
@@ -80,12 +80,11 @@ class StudentCoursesSerializer(ModelSerializer):
 
     @staticmethod
     def count_articles(obj):
-        lessons = obj.studentlesson_set.all()
-        finished_articles = 0
+        lessons = StudentLesson.objects.filter(course=obj.course)
+        finished_articles = StudentLesson.objects.filter(course=obj.course, finished=True).count()
         total_articles = 0
         for lesson in lessons:
-            finished_articles += lesson.studentarticle_set.filter(finished=True).count()
-            total_articles += lesson.studentarticle_set.all().count()
+            total_articles += StudentArticle.objects.filter(lesson=lesson.lesson).count()
 
         return finished_articles * 100 // total_articles
 
@@ -99,14 +98,27 @@ class StudentCoursesSerializer(ModelSerializer):
         return data
 
 
-class StudentArticleSerializer(ModelSerializer):
+class InnerStudentArticleSerializer(ModelSerializer):
+    article = ArticleSerializer()
+
     class Meta:
         model = StudentArticle
         fields = '__all__'
 
 
+class StudentArticleSerializer(ModelSerializer):
+    class Meta:
+        model = Article
+        fields = '__all__'
+
+
+class InnerLessonSerializer(ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['title']
+
+
 class StudentLessonSerializer(ModelSerializer):
-    # lesson = LessonSerializer()
 
     class Meta:
         model = StudentLesson
@@ -114,10 +126,12 @@ class StudentLessonSerializer(ModelSerializer):
 
     @staticmethod
     def get_lesson_articles(obj):
-        result = StudentArticleSerializer(instance=obj.studentarticle_set.all(), many=True)
+        result = InnerStudentArticleSerializer(instance=StudentArticle.objects.filter(lesson=obj.lesson), many=True)
         return result.data
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['lesson_articles'] = self.get_lesson_articles(instance)
+        data['lesson_articles'] = filter_student_lessons(self.get_lesson_articles(instance))
+        data['title'] = InnerLessonSerializer(instance=instance.lesson).data.get('title')
         return data
+
