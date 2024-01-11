@@ -4,6 +4,7 @@ def filter_student_lessons(obj):
         result.append(
             {
                 'id': item['article']['id'],
+                'slug': item['article']['slug'],
                 'title': item['article']['title'],
                 'quiz_score': item['article']['quiz_score'],
                 'lock': item['lock'],
