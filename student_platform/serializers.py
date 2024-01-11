@@ -8,7 +8,7 @@ from .utils import filter_student_lessons
 class ArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
-        fields = ['id', 'title']
+        fields = ['id', 'slug', 'title']
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
