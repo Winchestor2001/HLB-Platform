@@ -48,7 +48,7 @@ class StudentLessonAPIView(ListAPIView):
 
 class StudentArticleAPIView(RetrieveAPIView):
     serializer_class = StudentArticleSerializer
-    lookup_field = 'article_slug'
+    lookup_field = 'slug'
     queryset = Article.objects.all()
     permission_classes = [IsAuthenticated]
 
