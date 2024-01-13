@@ -81,3 +81,12 @@ class StudentArticle(models.Model):
     def __str__(self):
         return f"{self.student} - {self.article}"
 
+
+class StudentQuiz(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
+    score = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.student} - {self.quiz}"
+
