@@ -135,3 +135,14 @@ class StudentLessonSerializer(ModelSerializer):
         data['title'] = InnerLessonSerializer(instance=instance.lesson).data.get('title')
         return data
 
+
+class QuizSerializer(ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = '__all__'
+
+
+class StudentArticleQuizSerializer(ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = '__all__'

@@ -31,6 +31,7 @@ class Quiz(models.Model):
     mark_3 = models.CharField(max_length=100)
     mark_4 = models.CharField(max_length=100)
     score = models.IntegerField(default=0)
+    time = models.IntegerField(default=60)
 
     def __str__(self):
         return f"{self.question} - {self.score}"

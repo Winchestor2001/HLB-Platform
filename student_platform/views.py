@@ -2,7 +2,7 @@ from .models import Course, Lesson, StudentCourse, StudentLesson, Article
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
-    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer
+    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -52,7 +52,12 @@ class StudentArticleAPIView(RetrieveAPIView):
     queryset = Article.objects.all()
     permission_classes = [IsAuthenticated]
 
-    # def get_queryset(self):
-    #     article_id = self.kwargs['article_id']
-    #     return Article.objects.get(pk=article_id)
 
+class StudentArticleQuizAPIView(ListAPIView):
+    serializer_class = StudentArticleQuizSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        article_slug = self.kwargs['slug']
+        article = Article.objects.get(slug=article_slug)
+        return article.quiz.all()

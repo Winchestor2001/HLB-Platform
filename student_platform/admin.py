@@ -17,6 +17,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
     list_display = ['lesson', 'title', 'read_time']
     list_display_links = ['lesson']
 
