@@ -67,6 +67,6 @@ class StudentArticleQuizAPIView(ListAPIView):
     def get_queryset(self):
         article_slug = self.kwargs['slug']
         article = Article.objects.get(slug=article_slug)
-        quiz = article.quiz.all()
-        shuffle(quiz)
-        return quiz
+        quizzes = list(article.quiz.all())
+        shuffle(quizzes)
+        return quizzes
