@@ -4,6 +4,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView,
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
     StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer
 from rest_framework.permissions import IsAuthenticated
+from random import shuffle
 
 
 class CourseAPIView(ListAPIView):
@@ -66,4 +67,6 @@ class StudentArticleQuizAPIView(ListAPIView):
     def get_queryset(self):
         article_slug = self.kwargs['slug']
         article = Article.objects.get(slug=article_slug)
-        return article.quiz.all()
+        quiz = article.quiz.all()
+        shuffle(quiz)
+        return quiz
