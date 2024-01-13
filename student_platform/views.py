@@ -39,11 +39,12 @@ class StudentCoursesView(ListAPIView):
 
 class StudentLessonAPIView(ListAPIView):
     serializer_class = StudentLessonSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         course_id = self.kwargs['course_slug']
-        return StudentLesson.objects.filter(course__slug=course_id)
+        user = self.request.user
+        return StudentLesson.objects.filter(course__slug=course_id, student__user=user)
 
 
 class StudentArticleAPIView(RetrieveAPIView):
