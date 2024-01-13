@@ -124,9 +124,9 @@ class StudentLessonSerializer(ModelSerializer):
         model = StudentLesson
         fields = '__all__'
 
-    @staticmethod
-    def get_lesson_articles(obj):
-        result = InnerStudentArticleSerializer(instance=StudentArticle.objects.filter(lesson=obj.lesson), many=True)
+    def get_lesson_articles(self, obj):
+        user = self.context['request'].user
+        result = InnerStudentArticleSerializer(instance=StudentArticle.objects.filter(lesson=obj.lesson, student__user=user), many=True)
         return result.data
 
     def to_representation(self, instance):
