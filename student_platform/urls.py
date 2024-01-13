@@ -8,5 +8,5 @@ urlpatterns = [
     path('add_course/', StudentAddCourseView.as_view()),
     path('student_courses/<int:student_id>/', StudentCoursesView.as_view()),
     path('student_lessons/<slug:course_slug>/', StudentLessonAPIView.as_view()),
-    path('student_article/<slug:article_slug>/', StudentArticleAPIView.as_view()),
+    path('student_article/<slug:slug>/', StudentArticleAPIView.as_view()),
 ]
