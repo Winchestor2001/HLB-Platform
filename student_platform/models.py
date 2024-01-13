@@ -55,7 +55,7 @@ class Article(models.Model):
 
 class StudentCourse(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug', unique=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, to_field='slug')
 
     def __str__(self):
         return f"{self.student} - {self.course}"
