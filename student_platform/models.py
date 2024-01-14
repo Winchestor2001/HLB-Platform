@@ -77,6 +77,7 @@ class StudentArticle(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True)
     lock = models.BooleanField(default=True)
     finished = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.student} - {self.article}"
@@ -89,4 +90,3 @@ class StudentQuiz(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.quiz}"
-

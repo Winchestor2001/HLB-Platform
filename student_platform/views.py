@@ -1,6 +1,9 @@
-from .models import Course, Lesson, StudentCourse, StudentLesson, Article
+from rest_framework import status
+from rest_framework.response import Response
+
+from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, get_object_or_404
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
     StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -56,7 +59,7 @@ class StudentArticleAPIView(RetrieveAPIView):
     def get_object(self):
         article_slug = self.kwargs['slug']
         user = self.request.user
-        queryset = Article.objects.get(studentarticle__student__user=user, slug=article_slug)
+        queryset = StudentArticle.objects.get(student__user=user, article__slug=article_slug)
         return queryset
 
 
@@ -70,3 +73,13 @@ class StudentArticleQuizAPIView(ListAPIView):
         quizzes = list(article.quiz.all())
         shuffle(quizzes)
         return quizzes
+
+
+class StudentArticleReadAPIView(APIView):
+    def post(self, request):
+        student = StudentArticle.objects.get(
+            student__id=request.data['student_id'], article__slug=request.data['article_slug']
+        )
+        student.read = True
+        student.save()
+        return Response(status=status.HTTP_200_OK)
