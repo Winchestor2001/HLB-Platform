@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from accounts.models import Student
-from .models import Course, Lesson, Article, Quiz, StudentCourse, StudentLesson, StudentArticle
+from .models import StudentCourse, StudentLesson, StudentArticle
+from admin_platform.models import Course, Lesson, Article, Quiz
 from .utils import filter_student_lessons
 
 
