@@ -5,9 +5,6 @@ from .models import Course, Lesson, Article, Quiz
 from .serializers import AddCourseSerializer
 
 
-class AddCourseAPI(APIView):
-    # queryset = Course.objects.all()
-    # serializer_class = AddCourseSerializer
-    def post(self, request):
-        print(request.data)
-        return Response({'status': "ok"})
+class AddCourseAPI(CreateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = AddCourseSerializer
