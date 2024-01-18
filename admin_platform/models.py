@@ -37,7 +37,7 @@ class Quiz(models.Model):
 
 
 class Article(models.Model):
-    slug = models.SlugField(blank=True, null=True)
+    slug = models.SlugField(blank=True, null=True, unique=True)
     number = models.IntegerField(default=0)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
