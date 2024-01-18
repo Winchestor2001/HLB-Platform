@@ -1,5 +1,6 @@
 from django.template.defaultfilters import slugify
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from .models import Course, Lesson, Article, Quiz
 
@@ -12,6 +13,10 @@ class AddCourseSerializer(ModelSerializer):
     def create(self, validated_data):
         slug = slugify(validated_data['title'])
         if Course.objects.filter(slug=slug).exists():
-            raise serializers.ValidationError("Course with this title already exists.")
+            error_message = "Course with this title already exists."
+            res = serializers.ValidationError(error_message)
+            res.status_code = status.HTTP_409_CONFLICT
+            raise res
+
         validated_data['slug'] = slug
         return Course.objects.create(**validated_data)
