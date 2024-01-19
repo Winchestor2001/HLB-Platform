@@ -22,6 +22,20 @@ class AddCourseSerializer(ModelSerializer):
         return Course.objects.create(**validated_data)
 
 
+class AddLessonSerializer(ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = '__all__'
+
+    def create(self, validated_data):
+        lesson = Lesson.objects.filter(title=validated_data['title'], course=validated_data['course']).exists()
+        if lesson:
+            res = serializers.ValidationError()
+            res.status_code = status.HTTP_409_CONFLICT
+            raise res
+        return Lesson.objects.create(**validated_data)
+
+
 class GetCourseSerializer(ModelSerializer):
     class Meta:
         model = Course
@@ -29,5 +43,6 @@ class GetCourseSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         data = super(GetCourseSerializer, self).to_representation(instance)
-        data['lessons'] = instance.lesson_set.all()
+        data['lessons'] = AddLessonSerializer(instance=instance.lesson_set.all(), many=True).data
         return data
+
