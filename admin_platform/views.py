@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Course, Lesson, Article, Quiz
@@ -41,3 +41,14 @@ class DeleteLessonAPI(DestroyAPIView):
         instance.delete()
         return Response(status=204)
 
+
+class UpdateCourseAPI(UpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = AddCourseSerializer
+    lookup_field = 'id'
+
+
+class UpdateLessonAPI(UpdateAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = AddLessonSerializer
+    lookup_field = 'id'

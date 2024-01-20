@@ -21,6 +21,17 @@ class AddCourseSerializer(ModelSerializer):
         validated_data['slug'] = slug
         return Course.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+            # Update the slug if the title is changed
+        if 'title' in validated_data:
+            instance.slug = slugify(validated_data['title'])
+
+        instance.save()
+        return instance
+
 
 class AddLessonSerializer(ModelSerializer):
     class Meta:
