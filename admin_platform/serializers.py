@@ -57,3 +57,19 @@ class GetCourseSerializer(ModelSerializer):
         data['lessons'] = AddLessonSerializer(instance=instance.lesson_set.all(), many=True).data
         return data
 
+
+class GetQuizSerializer(ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = '__all__'
+
+
+class GetArticleSerializer(ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ['id', 'slug', 'title', 'context', 'file', 'video', 'image']
+
+    def to_representation(self, instance):
+        data = super(GetArticleSerializer, self).to_representation(instance)
+        data['quizzes'] = GetQuizSerializer(instance=instance.quiz.all(), many=True).data
+        return data
