@@ -67,9 +67,23 @@ class GetQuizSerializer(ModelSerializer):
 class GetArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
-        fields = ['id', 'slug', 'title', 'context', 'file', 'video', 'image']
+        fields = ['id', 'slug', 'title', 'file']
 
     def to_representation(self, instance):
         data = super(GetArticleSerializer, self).to_representation(instance)
         data['quizzes'] = GetQuizSerializer(instance=instance.quiz.all(), many=True).data
         return data
+
+
+class AddArticleSerializer(ModelSerializer):
+    quiz = GetQuizSerializer(many=True)
+
+    class Meta:
+        model = Article
+        fields = '__all__'
+
+    def create(self, validated_data):
+        slug = slugify(validated_data['title'])
+        validated_data['slug'] = slug
+        validated_data['read_time'] = 200
+        return Article.objects.create(**validated_data)

@@ -2,7 +2,8 @@ from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Course, Lesson, Article, Quiz
-from .serializers import AddCourseSerializer, GetCourseSerializer, AddLessonSerializer, GetArticleSerializer
+from .serializers import AddCourseSerializer, GetCourseSerializer, AddLessonSerializer, GetArticleSerializer, \
+    AddArticleSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
@@ -71,3 +72,14 @@ class GetArticleAPI(ListAPIView):
         course = Course.objects.get(id=self.request.GET.get('course_id'))
         lesson = Lesson.objects.get(id=self.request.GET.get('lesson_id'), course=course)
         return Article.objects.filter(lesson=lesson)
+
+
+class AddArticleAPI(CreateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = AddArticleSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+
+
+

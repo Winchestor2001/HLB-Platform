@@ -41,12 +41,12 @@ class Article(models.Model):
     number = models.IntegerField(default=0)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    context = models.TextField()
+    # context = models.TextField()
     file = models.FileField(upload_to='article/file/', blank=True, null=True)
-    video = models.FileField(upload_to='article/video/', blank=True, null=True)
-    image = models.FileField(upload_to='article/image/', blank=True, null=True)
-    quiz = models.ManyToManyField(Quiz)
-    read_time = models.BigIntegerField()
+    # video = models.FileField(upload_to='article/video/', blank=True, null=True)
+    # image = models.FileField(upload_to='article/image/', blank=True, null=True)
+    quiz = models.ManyToManyField(Quiz, blank=True, null=True)
+    read_time = models.BigIntegerField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.lesson} - {self.title}"
