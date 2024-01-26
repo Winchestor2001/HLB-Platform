@@ -80,6 +80,17 @@ class AddArticleAPI(CreateAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
+class DeleteArticleAPI(DestroyAPIView):
+    queryset = Article.objects.all()
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        instance.delete()
+        return Response(status=204)
+
 
 
 

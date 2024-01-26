@@ -1,7 +1,7 @@
 import fitz
 
 
-def calculate_reading_time(pdf_path, words_per_minute=100):
+def calculate_reading_time(pdf_path, words_per_minute=80):
     doc = fitz.open(pdf_path)
     total_words = 0
 
@@ -10,4 +10,4 @@ def calculate_reading_time(pdf_path, words_per_minute=100):
         total_words += len(page.get_text("text").split())
 
     total_reading_time_minutes = total_words / words_per_minute
-    return total_reading_time_minutes
+    return total_reading_time_minutes * 60

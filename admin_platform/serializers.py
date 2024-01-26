@@ -3,6 +3,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from .models import Course, Lesson, Article, Quiz
+from .utils import calculate_reading_time
 
 
 class AddCourseSerializer(ModelSerializer):
@@ -76,7 +77,7 @@ class GetArticleSerializer(ModelSerializer):
 
 
 class AddArticleSerializer(ModelSerializer):
-    quiz = GetQuizSerializer(many=True)
+    quiz = GetQuizSerializer(many=True, required=False)
 
     class Meta:
         model = Article
@@ -85,5 +86,7 @@ class AddArticleSerializer(ModelSerializer):
     def create(self, validated_data):
         slug = slugify(validated_data['title'])
         validated_data['slug'] = slug
-        validated_data['read_time'] = 200
-        return Article.objects.create(**validated_data)
+        article = Article.objects.create(**validated_data)
+        article.read_time = calculate_reading_time(f"media/{article.file}")
+        article.save()
+        return article
