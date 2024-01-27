@@ -90,3 +90,20 @@ class AddArticleSerializer(ModelSerializer):
         article.read_time = calculate_reading_time(f"media/{article.file}")
         article.save()
         return article
+
+    def update(self, instance, validated_data):
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        if Article.objects.filter(title=validated_data['title']).exists():
+            error_message = "Article with this title already exists."
+            res = serializers.ValidationError(error_message)
+            res.status_code = status.HTTP_409_CONFLICT
+            raise res
+
+        if 'title' in validated_data:
+            instance.slug = slugify(validated_data['title'])
+
+        instance.save()
+        return instance

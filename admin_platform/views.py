@@ -92,5 +92,10 @@ class DeleteArticleAPI(DestroyAPIView):
         return Response(status=204)
 
 
+class UpdateArticleAPI(UpdateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = AddArticleSerializer
+    lookup_field = 'id'
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
