@@ -62,10 +62,10 @@ class StudentAddCourseSerializer(ModelSerializer):
             articles = Article.objects.filter(lesson=lesson)
 
             for article in articles:
-                if article.number != 1:
-                    lock = True
-                else:
+                if article.number == 1 and article.lesson.number == 1:
                     lock = False
+                else:
+                    lock = True
 
                 StudentArticle.objects.create(
                     lesson=lesson, student=student, lock=lock, article=article

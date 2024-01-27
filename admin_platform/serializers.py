@@ -113,3 +113,28 @@ class AddArticleSerializer(ModelSerializer):
 
         instance.save()
         return instance
+
+
+class AddQuizSerializer(ModelSerializer):
+    article_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = Quiz
+        fields = '__all__'
+
+    def create(self, validated_data):
+        article_id = validated_data.pop('article_id')
+        quiz = Quiz.objects.create(**validated_data)
+        article = Article.objects.get(id=article_id)
+        article.quiz.add(quiz)
+        article.save()
+        return quiz
+
+    def update(self, instance, validated_data):
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+        return instance
+
