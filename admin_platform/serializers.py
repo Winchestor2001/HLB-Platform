@@ -84,6 +84,12 @@ class AddArticleSerializer(ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        if Article.objects.filter(title=validated_data['title']).exists():
+            error_message = "Article with this title already exists."
+            res = serializers.ValidationError(error_message)
+            res.status_code = status.HTTP_409_CONFLICT
+            raise res
+
         slug = slugify(validated_data['title'])
         validated_data['slug'] = slug
         article = Article.objects.create(**validated_data)
