@@ -1,11 +1,14 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle
+from accounts.models import Student
+from admin_platform.models import Quiz
+from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
-    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer
+    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer, QuizSerializer, \
+    StudentQuizSerializer
 from rest_framework.permissions import IsAuthenticated
 from random import shuffle
 
@@ -76,6 +79,7 @@ class StudentArticleQuizAPIView(ListAPIView):
 
 
 class StudentArticleReadAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         student = StudentArticle.objects.get(
             student__id=request.data['student_id'], article__slug=request.data['article_slug']
@@ -83,3 +87,27 @@ class StudentArticleReadAPIView(APIView):
         student.read = True
         student.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class StudentQuizAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        student = Student.objects.get(user=request.user)
+        student_quiz = StudentQuiz.objects.filter(student=student, score__lt=1)
+        serializer = StudentQuizSerializer(student_quiz, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        quiz_id = request.data['quiz_id']
+        variant = request.data['variant']
+        quiz = Quiz.objects.get(id=quiz_id)
+        score = 0
+        if quiz.answer == variant:
+            score = quiz.score
+
+        student = Student.objects.get(user=request.user)
+        StudentQuiz.objects.create(
+            student=student, quiz=quiz, score=score
+        )
+        return Response({"status": "RECEIVED"}, status=status.HTTP_200_OK)

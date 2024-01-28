@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from accounts.models import Student
-from .models import StudentCourse, StudentLesson, StudentArticle
+from .models import StudentCourse, StudentLesson, StudentArticle, StudentQuiz
 from admin_platform.models import Course, Lesson, Article, Quiz
 from .utils import filter_student_lessons
 
@@ -148,4 +148,12 @@ class QuizSerializer(ModelSerializer):
 class StudentArticleQuizSerializer(ModelSerializer):
     class Meta:
         model = Quiz
+        fields = '__all__'
+
+
+class StudentQuizSerializer(ModelSerializer):
+    quiz = QuizSerializer()
+
+    class Meta:
+        model = StudentQuiz
         fields = '__all__'
