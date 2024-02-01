@@ -103,16 +103,5 @@ class StudentQuizAPIView(APIView):
 
     def post(self, request):
         quizzes = request.data
-        check_student_quizzes(request.user, quizzes)
-        # quiz_id = request.data['quiz_id']
-        # variant = request.data['variant']
-        # quiz = Quiz.objects.get(id=quiz_id)
-        # score = 0
-        # if quiz.answer == variant:
-        #     score = quiz.score
-        #
-        # student = Student.objects.get(user=request.user)
-        # StudentQuiz.objects.create(
-        #     student=student, quiz=quiz, score=score
-        # )
-        return Response({"status": "RECEIVED"}, status=status.HTTP_200_OK)
+        incorrect_quizzes = check_student_quizzes(request.user, quizzes)
+        return Response({"incorrect": incorrect_quizzes}, status=status.HTTP_200_OK)

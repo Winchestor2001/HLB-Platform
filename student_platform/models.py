@@ -36,6 +36,7 @@ class StudentArticle(models.Model):
 class StudentQuiz(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
+    article = models.ForeignKey(StudentArticle, on_delete=models.SET_NULL, null=True)
     score = models.IntegerField(default=0)
 
     def __str__(self):

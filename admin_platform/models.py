@@ -5,6 +5,7 @@ class Course(models.Model):
     slug = models.SlugField(blank=True, null=True, unique=True)
     title = models.CharField(max_length=200)
     poster_image = models.ImageField(upload_to='course/')
+    course_visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
