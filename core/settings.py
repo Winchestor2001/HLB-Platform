@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "student_platform",
     "rest_framework",
     "drf_yasg",
+    "audit_site",
 ]
 
 MIDDLEWARE = [

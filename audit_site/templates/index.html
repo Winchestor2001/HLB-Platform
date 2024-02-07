@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>International Audit Consulting</title>
+    <!-- main css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- tailwind cdn -->
+    <script src="{% static 'js/tailwind.js' %}"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        "right": {
+                            "0%": { transform: "translateX(15%)" },
+                            "50%": { transform: "translateX(0%)" },
+                            "100%": { transform: "translateX(15%)" }
+                        }
+                    },
+                    animation: {
+                        "right": "right 2s ease-in-out infinite"
+                    }
+                },
+            },
+        }
+    </script>
+    <!-- poppins font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- swiper carusel -->
+    <link rel="stylesheet" href="{% static 'css/carusel.css' %}" />
+</head>
+
+<body>
+    <!-- navbar -->
+    <div class="fixed top-0 w-full xl:bg-teal-500 z-[200000]">
+        <div class="divide">
+            <div class="flex items-center gap-4 justify-between w-full bg-teal-500 px-5 py-5 md:px-10 ">
+                <div class="flex items-center gap-3">
+                    <img src="{% static 'Images/logo.png' %}" class="w-[7rem] md:w-[200px]" alt="logo" />
+                    <div>
+                        <a href="#content" class="md:text-[24px] text-white font-[700]">
+                            <h1 class="text-[13px]"><span class="hidden sm:block">Аудиторская организация
+                                    ООО</span>«INTERNATIONAL AUDIT CONSULTING»</h1>
+                        </a>
+                    </div>
+                </div>
+                <div id="bar" class="transition-all xl:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+
+                </div>
+            </div>
+            <ul id="ul"
+                class="flex flex-col px-5  md:px-10 bg-teal-500 ul transition-all delay-300 xl:flex-row h-[0px] xl:h-auto overflow-hidden justify-between text-white font-[600] items-center">
+                <li>
+                    <a class="flex justify-start items-center gap-2" href="#content"><img src="{% static 'Images/info.png' %}"
+                            class="w-[20px]" alt="image" />О нас</a>
+                </li>
+                <li>
+                    <a class="flex justify-start items-center gap-2" href="#swiper"><img
+                            src="{% static 'Images/customer-service.png' %}" class="w-[20px]" alt="image" />Услуги</a>
+                </li>
+                <li>
+                    <a class="flex justify-start items-center gap-2" href="#footer"><img src="{% static 'Images/phone.png' %}"
+                            class="w-[20px]" alt="image" />Контакты</a>
+                </li>
+                <li class="pb-2">
+                    <select id="" class="bg-emerald-600 py-1 outline-none rounded-md px-3">
+                        <option value="uzb">UZB</option>
+                        <option value="eng">ENG</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- navbar -->
+    <!-- content -->
+    <div id='content' class='bg flex flex-col justify-center items-start px-3 md:px-10 lg:px-20 pt-9'>
+        <div class='d-grid'>
+            <div>
+                <h1 class='text-[4em] md:text-[6em] font-bold'>О нас</h1>
+                <p class='text-[1em] md:text-[1.5em] font-semibold'>Аудиторская организация ООО «INTERNATIONAL AUDIT
+                    CONSULTING» осуществляет свою деятельность на основании свидетельство РУз. №1106607 от 03 марта
+                    2022г.</p>
+            </div>
+        </div>
+    </div>
+    <!-- content -->
+    <!-- carausel -->
+    <div id="swiper" class="p-4 py-14 items-center">
+        <h1 class="text-[50px] font-bold text-center">Услуги</h1>
+        <div class="swiper mySwiper ">
+            <div class="swiper-wrapper">
+                {% for course in courses %}
+                <div class="swiper-slide">
+                    <div>
+                        <div class="card-img aspect-[3/3]">
+                            <img src="{{ course.poster_image.url }}" alt="card_img_1" class="w-full" />
+                        </div>
+                        <div class="card-body p-5 px-8 bg-white">
+                            <a href="https://hlb.netlify.app" target="_blank" class='items-center text-center text-xl font-bold flex flex-col gap-3 mb-5'>
+                                <div>{{ course.title }}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <!-- carausel -->
+    <!-- number -->
+    <div class='fixed z-[15000] top-[28%] left-3'>
+        <div
+            class="border-teal-600 border-[3px] p-2 md:p-3 lg:p-4 bg-yellow-500 rounded-md animate-right  text-white px-3 md:px-4 lg:px-6 text-[10px] md:text-[15px]">
+            <a href="tel:+998999091117" class="">+998 99 909 11 17</a>
+        </div>
+    </div>
+    <!-- number -->
+    <!-- body -->
+    <div class='grid grid-cols-1 md:grid-cols-2 min-h-[50vh]'>
+        <!-- form -->
+        <div class='bg-teal-600 p-5 py-14 md:py-18 flex flex-col justify-center'>
+            <div class='flex justify-center'>
+                <div>
+                    <h2 class="mb-5 text-4xl font-bold text-white">Оставить заявку</h2>
+                    <form action="" class='flex flex-col gap-6'>
+                        <input required placeholder='Имя' type="text"
+                            class="bg-white p-3 outline-none text-xl rounded-md transition-all border delay-150 focus:bg-transparent focus:shadow-2xl placeholder:text-slate-600" />
+                        <input required placeholder='Телефон' type="number"
+                            class="bg-white p-3 outline-none text-xl rounded-md transition-all border delay-150 focus:bg-transparent focus:shadow-2xl placeholder:text-slate-600" />
+                        <button
+                            class="bg-slate-900 px-5 py-3 text-xl rounded-md text-white font-semibold border border-slate-900 transition-all delay-150 hover:bg-transparent hover:text-slate-900">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- form -->
+        <!-- map -->
+        <div class='bg-teal-600 min-h-[20rem] md:min-h-0'>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12084.051699914822!2d72.3125006!3d40.78373!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38bceb555645cf0b%3A0x643832eddd8e421c!2sKhamkor%20Biznes%20Tsentr!5e0!3m2!1sen!2s!4v1704364377656!5m2!1sen!2s"
+                width="100%" height="100%" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <!-- map -->
+    </div>
+    <!-- body -->
+    <!-- top -->
+    <div class='fixed bottom-2 right-4 z-[1000]'>
+        <a href="#content">
+            <button>
+                <img src="{% static 'Images/arrow.png' %}" alt="up" class='animate-bounce w-10' />
+            </button>
+        </a>
+    </div>
+    <!-- top -->
+    <!-- footer -->
+    <div id="footer" class='bg-teal-600/40 py-6 md:py-10 lg:py-14'>
+        <div class="py-4 px-16">
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <li class='mb-6 lg:mb-0 items-center'>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">Адрес:</p>
+                    <p class="text-xl font-[500]">г.Андижан, улица Бобуршох, 56</p>
+                </li>
+                <li class='mb-6 lg:mb-0 items-center'>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">Рабочее время:</p>
+                    <p class="text-xl font-[500]">Пн - Пт 9:00 - 18:00 Суббота и Воскресенье выходной день</p>
+                </li>
+                <li class='mb-6 md:mb-0 items-center'>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">Email</p>
+                    <a href="mailto:haydarov.lochinbek@yandex.ru"
+                        class="text-xl font-[500] break-words">haydarov.lochinbek@yandex.ru</a>
+                </li>
+                <li class='items-center'>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">Контакты:</p>
+                    <a href="tel:+998999091117" class="text-xl font-[500]">+998 99 909 11 17</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <hr />
+            <p class="text-2xl px-16 mt-4 font-[500]">© Copyright 2024</p>
+        </div>
+    </div>
+    <!-- footer -->
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/carausel.js' %}"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            spaceBetween: 30,
+            loop: true,
+            navigation: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                440: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 40,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 50,
+                },
+            }
+        }
+        );
+    </script>
+</body>
+
+</html>
