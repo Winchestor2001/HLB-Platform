@@ -102,14 +102,14 @@ class UpdateArticleAPI(UpdateAPIView):
 class AddQuizAPI(CreateAPIView):
     queryset = Quiz.objects.all()
     serializer_class = AddQuizSerializer
-    # permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 class DeleteQuizAPI(DestroyAPIView):
     queryset = Quiz.objects.all()
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
-    # permission_classes = [IsAuthenticated, IsAdminUser]
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
 
@@ -121,4 +121,4 @@ class UpdateQuizAPI(UpdateAPIView):
     queryset = Quiz.objects.all()
     lookup_field = 'id'
     serializer_class = AddQuizSerializer
-    # permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]

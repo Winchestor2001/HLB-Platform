@@ -2,14 +2,14 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from accounts.models import Student
-from accounts.utils import check_student_quizzes
+from .utils import check_student_quizzes
 from admin_platform.models import Quiz
 from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
     StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer, QuizSerializer, \
-    StudentQuizSerializer
+    StudentQuizSerializer, GetAllArticlesSerializer
 from rest_framework.permissions import IsAuthenticated
 from random import shuffle
 
@@ -105,3 +105,16 @@ class StudentQuizAPIView(APIView):
         quizzes = request.data
         incorrect_quizzes = check_student_quizzes(request.user, quizzes)
         return Response({"incorrect": incorrect_quizzes}, status=status.HTTP_200_OK)
+
+
+class GetAllArticlesAPIView(ListAPIView):
+    serializer_class = GetAllArticlesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', None)
+        articles = Article.objects.all()
+        if query:
+            articles = Article.objects.filter(title__icontains=query)
+        return articles
+

@@ -157,3 +157,10 @@ class StudentQuizSerializer(ModelSerializer):
     class Meta:
         model = StudentQuiz
         fields = '__all__'
+
+
+class GetAllArticlesSerializer(ModelSerializer):
+
+    class Meta:
+        model = Article
+        fields = '__all__'
