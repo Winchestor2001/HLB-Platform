@@ -25,4 +25,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        sudo supervisorctl restart all
+        ssh int-audit@89.223.125.219 'bash -s' < deploy_script.sh
