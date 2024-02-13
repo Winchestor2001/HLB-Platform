@@ -109,7 +109,7 @@ class StudentQuizAPIView(APIView):
 
 class GetAllArticlesAPIView(ListAPIView):
     serializer_class = GetAllArticlesSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         query = self.request.query_params.get('query', None)
