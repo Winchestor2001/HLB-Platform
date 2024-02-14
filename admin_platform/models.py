@@ -7,6 +7,9 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     poster_image = models.ImageField(upload_to='course/')
     course_visible = models.BooleanField(default=True)
+    price = models.FloatField(default=0.0)
+    certification = models.BooleanField(default=True)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -47,6 +50,8 @@ class Article(models.Model):
     # video = models.FileField(upload_to='article/video/', blank=True, null=True)
     quiz = models.ManyToManyField(Quiz, blank=True, null=True)
     read_time = models.BigIntegerField(blank=True, null=True)
+    price = models.FloatField(default=0.0)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.lesson} - {self.title}"
