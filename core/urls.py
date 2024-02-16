@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.static import serve
 from .yasg import urlpatterns as yasg_urlpatterns
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,3 +18,9 @@ urlpatterns = [
 ]
 
 urlpatterns += yasg_urlpatterns
+
+urlpatterns += i18n_patterns(
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('', include('audit_site.urls')),
+    prefix_default_language=False
+)
