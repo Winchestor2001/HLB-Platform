@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Lesson, Article, Quiz, StudentCourse, StudentQuiz
+from .models import Course, Lesson, Article, Quiz, StudentCourse, StudentQuiz, StudentSingleArticle
 
 
 @admin.register(Course)
@@ -39,4 +39,8 @@ class StudentQuizAdmin(admin.ModelAdmin):
     list_display = ['student', 'quiz']
     list_display_links = ['student']
 
+
+@admin.register(StudentSingleArticle)
+class StudentSingleArticleAdmin(admin.ModelAdmin):
+    list_display = ['student', 'article', 'paid']
 

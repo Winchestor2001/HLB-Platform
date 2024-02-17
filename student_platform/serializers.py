@@ -1,7 +1,8 @@
+from rest_framework import serializers, status
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from accounts.models import Student
-from .models import StudentCourse, StudentLesson, StudentArticle, StudentQuiz
+from .models import StudentCourse, StudentLesson, StudentArticle, StudentQuiz, StudentSingleArticle
 from admin_platform.models import Course, Lesson, Article, Quiz
 from .utils import filter_student_lessons
 
@@ -164,3 +165,39 @@ class GetAllArticlesSerializer(ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
+
+    def check_added(self, obj):
+        user = self.context['request'].user
+        if StudentSingleArticle.objects.filter(student__user=user, article=obj).exists():
+            return True
+        else:
+            return False
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['is_added'] = self.check_added(instance)
+        return data
+
+
+class StudentSingleSerializer(ModelSerializer):
+    class Meta:
+        model = StudentSingleArticle
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['title'] = instance.article.title
+        data['slug'] = instance.article.slug
+        return data
+
+    def create(self, validated_data):
+        article = Article.objects.get(id=validated_data['article'].id)
+        single_articles = StudentSingleArticle.objects.filter(article=article).exists()
+        if not single_articles:
+            if not article.paid:
+                validated_data['paid'] = True
+            return super(StudentSingleSerializer, self).create(validated_data)
+        else:
+            res = serializers.ValidationError()
+            res.status_code = status.HTTP_409_CONFLICT
+            raise res

@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from accounts.models import Student
 from .utils import check_student_quizzes
 from admin_platform.models import Quiz
-from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz
+from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz, \
+    StudentSingleArticle
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSerializer, StudentCoursesSerializer, \
-    StudentLessonSerializer, ArticleSerializer, StudentArticleSerializer, StudentArticleQuizSerializer, QuizSerializer, \
-    StudentQuizSerializer, GetAllArticlesSerializer
+    StudentLessonSerializer, StudentArticleSerializer, StudentArticleQuizSerializer, \
+    StudentQuizSerializer, GetAllArticlesSerializer, StudentSingleSerializer
 from rest_framework.permissions import IsAuthenticated
 from random import shuffle
 
@@ -109,7 +110,7 @@ class StudentQuizAPIView(APIView):
 
 class GetAllArticlesAPIView(ListAPIView):
     serializer_class = GetAllArticlesSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         query = self.request.query_params.get('query', None)
@@ -117,4 +118,20 @@ class GetAllArticlesAPIView(ListAPIView):
         if query:
             articles = Article.objects.filter(title__icontains=query)
         return articles
+
+
+class StudentAddSingleArticleAPIView(CreateAPIView):
+    queryset = StudentSingleArticle
+    serializer_class = StudentSingleSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class StudentSingleArticleAPIView(ListAPIView):
+    serializer_class = StudentSingleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = StudentSingleArticle.objects.filter(student__user=user)
+        return queryset
 

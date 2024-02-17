@@ -41,3 +41,12 @@ class StudentQuiz(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.quiz}"
+
+
+class StudentSingleArticle(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.student} - {self.article}"
