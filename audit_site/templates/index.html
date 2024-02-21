@@ -46,7 +46,7 @@
                     <img src="{% static 'Images/logo.png' %}" class="w-[7rem] md:w-[200px]" alt="logo" />
                     <div>
                         <a href="#content" class="md:text-[24px] text-white font-[700]">
-                            <h1 class="text-[13px]"><span class="hidden sm:block">Аудиторская организация OOO</span>«INTERNATIONAL AUDIT CONSULTING»</h1>
+                            <h1 class="text-[13px]"><span class="hidden sm:block">{% trans 'Аудиторская организация OOO' %}</span>«INTERNATIONAL AUDIT CONSULTING»</h1>
                         </a>
                     </div>
                 </div>
@@ -62,15 +62,15 @@
                 class="flex flex-col px-5  md:px-10 bg-teal-500 ul transition-all delay-300 xl:flex-row h-[0px] xl:h-auto overflow-hidden justify-between text-white font-[600] items-center">
                 <li>
                     <a class="flex justify-start items-center gap-2" href="#content"><img src="{% static 'Images/info.png' %}"
-                            class="w-[20px]" alt="image" />О нас</a>
+                            class="w-[20px]" alt="image" />{% trans 'О нас' %}</a>
                 </li>
                 <li>
                     <a class="flex justify-start items-center gap-2" href="#swiper"><img
-                            src="{% static 'Images/customer-service.png' %}" class="w-[20px]" alt="image" />Услуги</a>
+                            src="{% static 'Images/customer-service.png' %}" class="w-[20px]" alt="image" />{% trans 'Услуги' %}</a>
                 </li>
                 <li>
                     <a class="flex justify-start items-center gap-2" href="#footer"><img src="{% static 'Images/phone.png' %}"
-                            class="w-[20px]" alt="image" />Контакты</a>
+                            class="w-[20px]" alt="image" />{% trans 'Контакты' %}</a>
                 </li>
                 <li class="pb-2">
                     <form action="{% url 'set_language' %}" method="post" class="langs">
@@ -96,17 +96,15 @@
     <div id='content' class='bg flex flex-col justify-center items-start px-3 md:px-10 lg:px-20 pt-9'>
         <div class='d-grid'>
             <div>
-                <h1 class='text-[4em] md:text-[6em] font-bold'>О нас</h1>
-                <p class='text-[1em] md:text-[1.5em] font-semibold'>Аудиторская организация ООО «INTERNATIONAL AUDIT
-                    CONSULTING» осуществляет свою деятельность на основании свидетельство РУз. №1106607 от 03 марта
-                    2022г.</p>
+                <h1 class='text-[4em] md:text-[6em] font-bold'>{% trans 'О нас' %}</h1>
+                <p class='text-[1em] md:text-[1.5em] font-semibold'>{% trans 'Аудиторская организация ООО «INTERNATIONAL AUDIT CONSULTING» осуществляет свою деятельность на основании свидетельство РУз. №1106607 от 03 марта 2022г.' %}</p>
             </div>
         </div>
     </div>
     <!-- content -->
     <!-- carausel -->
     <div id="swiper" class="p-4 py-14 items-center">
-        <h1 class="text-[50px] font-bold text-center">Услуги</h1>
+        <h1 class="text-[50px] font-bold text-center">{% trans 'Услуги' %}</h1>
         <div class="swiper mySwiper ">
             <div class="swiper-wrapper">
                 {% for course in courses %}
@@ -144,7 +142,7 @@
         <div class='bg-teal-600 p-5 py-14 md:py-18 flex flex-col justify-center'>
             <div class='flex justify-center'>
                 <div>
-                    <h2 class="mb-5 text-4xl font-bold text-white">Оставить заявку</h2>
+                    <h2 class="mb-5 text-4xl font-bold text-white">{% trans 'Оставить заявку' %}</h2>
                     <form action="" class='flex flex-col gap-6'>
                         <input required placeholder='Имя' type="text"
                             class="bg-white p-3 outline-none text-xl rounded-md transition-all border delay-150 focus:bg-transparent focus:shadow-2xl placeholder:text-slate-600" />
@@ -181,20 +179,20 @@
         <div class="py-4 px-16">
             <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 <li class='mb-6 lg:mb-0 items-center'>
-                    <p class="text-2xl font-bold text-teal-800 mb-2">Адрес:</p>
-                    <p class="text-xl font-[500]">г.Андижан, улица Бобуршох, 56</p>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">{% trans 'Адрес:' %}</p>
+                    <p class="text-xl font-[500]">{% trans 'г.Андижан, улица Бобуршох, 56' %}</p>
                 </li>
                 <li class='mb-6 lg:mb-0 items-center'>
-                    <p class="text-2xl font-bold text-teal-800 mb-2">Рабочее время:</p>
-                    <p class="text-xl font-[500]">Пн - Пт 9:00 - 18:00 Суббота и Воскресенье выходной день</p>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">{% trans 'Рабочее время:' %}</p>
+                    <p class="text-xl font-[500]">{% trans 'Пн - Пт 9:00 - 18:00 Суббота и Воскресенье выходной день' %}</p>
                 </li>
                 <li class='mb-6 md:mb-0 items-center'>
-                    <p class="text-2xl font-bold text-teal-800 mb-2">Email</p>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">{% trans 'Электронная почта' %}</p>
                     <a href="mailto:haydarov.lochinbek@yandex.ru"
                         class="text-xl font-[500] break-words">haydarov.lochinbek@yandex.ru</a>
                 </li>
                 <li class='items-center'>
-                    <p class="text-2xl font-bold text-teal-800 mb-2">Контакты:</p>
+                    <p class="text-2xl font-bold text-teal-800 mb-2">{% trans 'Контакты:' %}</p>
                     <a href="tel:+998999091117" class="text-xl font-[500]">+998 99 909 11 17</a>
                 </li>
             </ul>

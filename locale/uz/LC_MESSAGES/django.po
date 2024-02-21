@@ -38,9 +38,7 @@ msgstr "Kontaktlar"
 msgid ""
 "Аудиторская организация ООО «INTERNATIONAL AUDIT CONSULTING» осуществляет "
 "свою деятельность на основании свидетельство РУз. №1106607 от 03 марта 2022г."
-msgstr ""
-"O‘zbekiston Respublikasining 2022-yil 3-martdagi 1106607-sonli guvohnomasi asosida "
-"INTERNATIONAL AUDIT CONSULTING" MChJ auditorlik tashkiloti o‘z faoliyatini amalga oshiradi."
+msgstr "O‘zbekiston Respublikasining 2022-yil 3-martdagi 1106607-sonli guvohnomasi asosida INTERNATIONAL AUDIT CONSULTING MChJ auditorlik tashkiloti o‘z faoliyatini amalga oshiradi."
 
 #: .\audit_site\templates\index.html:145
 msgid "Оставить заявку"
