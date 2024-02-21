@@ -22,53 +22,53 @@ msgstr ""
 
 #: .\audit_site\templates\index.html:49
 msgid "Аудиторская организация OOO"
-msgstr ""
+msgstr "Аудиторская организация OOO"
 
 #: .\audit_site\templates\index.html:65 .\audit_site\templates\index.html:99
 msgid "О нас"
-msgstr ""
+msgstr "О нас"
 
 #: .\audit_site\templates\index.html:69 .\audit_site\templates\index.html:107
 msgid "Услуги"
-msgstr ""
+msgstr "Услуги"
 
 #: .\audit_site\templates\index.html:73
 msgid "Контакты"
-msgstr ""
+msgstr "Контакты"
 
 #: .\audit_site\templates\index.html:100
 msgid ""
 "Аудиторская организация ООО «INTERNATIONAL AUDIT CONSULTING» осуществляет "
 "свою деятельность на основании свидетельство РУз. №1106607 от 03 марта 2022г."
-msgstr ""
+msgstr "Аудиторская организация ООО «INTERNATIONAL AUDIT CONSULTING» осуществляет свою деятельность на основании свидетельство РУз. №1106607 от 03 марта 2022г."
 
 #: .\audit_site\templates\index.html:145
 msgid "Оставить заявку"
-msgstr ""
+msgstr "Оставить заявку"
 
 #: .\audit_site\templates\index.html:182
 msgid "Адрес:"
-msgstr ""
+msgstr "Адрес:"
 
 #: .\audit_site\templates\index.html:183
 msgid "г.Андижан, улица Бобуршох, 56"
-msgstr ""
+msgstr "г.Андижан, улица Бобуршох, 56"
 
 #: .\audit_site\templates\index.html:186
 msgid "Рабочее время:"
-msgstr ""
+msgstr "Рабочее время:"
 
 #: .\audit_site\templates\index.html:187
 msgid "Пн - Пт 9:00 - 18:00 Суббота и Воскресенье выходной день"
-msgstr ""
+msgstr "Пн - Пт 9:00 - 18:00 Суббота и Воскресенье выходной день"
 
 #: .\audit_site\templates\index.html:190
 msgid "Электронная почта"
-msgstr ""
+msgstr "Электронная почта"
 
 #: .\audit_site\templates\index.html:195
 msgid "Контакты:"
-msgstr ""
+msgstr "Контакты:"
 
 #: .\core\settings.py:203
 msgid "Uzbek"
