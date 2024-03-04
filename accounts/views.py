@@ -21,6 +21,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['student_id'] = student[0].id
             token['full_name'] = student[0].full_name
 
+        token['is_superuser'] = user.is_superuser
+
         return token
 
 
