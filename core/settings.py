@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "accounts",
     "admin_platform",
     "student_platform",
+    "click_payment",
     "rest_framework",
     "drf_yasg",
     "audit_site",

@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('audit_site.urls')),
     path('api/accounts/', include('accounts.urls')),
     path('api/student/', include('student_platform.urls')),
+    path('api/payment/', include('click_payment.urls')),
     path('api/admin/', include('admin_platform.urls')),
 
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
