@@ -2,9 +2,17 @@ from rest_framework import serializers, status
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from accounts.models import Student
+from click_payment.models import PaymentInvoice
+from click_payment.serializers import PaymentInvoiceSerializer
 from .models import StudentCourse, StudentLesson, StudentArticle, StudentQuiz, StudentSingleArticle
 from admin_platform.models import Course, Lesson, Article, Quiz
 from .utils import filter_student_lessons
+from rest_framework.reverse import reverse
+from environs import Env
+from rest_framework.response import Response
+
+env = Env()
+env.read_env()
 
 
 class ArticleSerializer(ModelSerializer):
@@ -28,9 +36,16 @@ class LessonSerializer(ModelSerializer):
         result = ArticleSerializer(instance=obj.article_set.all(), many=True)
         return result.data
 
+    def filter_studnet_course(self, obj):
+        request = self.context.get('request')
+        student = Student.objects.get(user=request.user)
+        student_courses = StudentCourse.objects.filter(student=student, course=obj).exists()
+        return student_courses
+    
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['lesson_articles'] = self.get_lesson_articles(instance)
+        data['my_course'] = self.filter_studnet_course(instance.course)
         return data
 
 
@@ -54,26 +69,46 @@ class StudentAddCourseSerializer(ModelSerializer):
     def create(self, validated_data):
         student = validated_data['student']
         course = validated_data['course']
-        lessons = Lesson.objects.filter(course=course)
-        for lesson in lessons:
-            StudentLesson.objects.create(
-                lesson=lesson, student=student, course=course
+        student_course = Course.objects.get(id=course.pk)
+        if student_course.paid:
+            payment_data = PaymentInvoice.objects.create(
+                payer=student, service=student_course.pk, type="course", amount=student_course.price
             )
+            payment_data = PaymentInvoiceSerializer(instance=payment_data)
 
-            articles = Article.objects.filter(lesson=lesson)
-
-            for article in articles:
-                if article.number == 1 and article.lesson.number == 1:
-                    lock = False
-                else:
-                    lock = True
-
-                StudentArticle.objects.create(
-                    lesson=lesson, student=student, lock=lock, article=article
+            response_data = {
+                'success': True,
+                'message': 'Invoice created successfully.',
+                'invoice': self.create_invoice(payment_data.data)
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            lessons = Lesson.objects.filter(course=course)
+            for lesson in lessons:
+                StudentLesson.objects.create(
+                    lesson=lesson, student=student, course=course
                 )
 
-        return super(StudentAddCourseSerializer, self).create(validated_data)
+                articles = Article.objects.filter(lesson=lesson)
 
+                for article in articles:
+                    if article.number == 1 and article.lesson.number == 1:
+                        lock = False
+                    else:
+                        lock = True
+
+                    StudentArticle.objects.create(
+                        lesson=lesson, student=student, lock=lock, article=article
+                    )
+
+            return super(StudentAddCourseSerializer, self).create(validated_data)
+
+    def create_invoice(self, data):
+                url = (f"https://my.click.uz/services/pay?service_id={env.str('CLICK_SERVICE_ID')}"
+                    f"&merchant_id={env.str('CLICK_MERCHANT_ID')}&amount={data.get('amount')}"
+                    f"&transaction_param={data.get('id')}"
+                    f"&return_url={reverse('status_invoice', request=self.context.get('request'))}")
+                return url
 
 class StudentCoursesSerializer(ModelSerializer):
     class Meta:

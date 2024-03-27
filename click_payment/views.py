@@ -13,7 +13,7 @@ env.read_env()
 
 
 class CreateInvoiceAPIView(CreateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.PaymentInvoice.objects.all()
     serializer_class = PaymentInvoiceSerializer
 

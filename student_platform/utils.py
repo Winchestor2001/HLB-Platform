@@ -57,3 +57,12 @@ def check_student_quizzes(user, quizzes):
         item.delete()
 
     return incorrect_quizzes
+
+
+def filter_student_courses(obj):
+    courses = []
+    for item in obj:
+        courses.append(item.course.slug)
+    return courses
+
+

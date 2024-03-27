@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from accounts.models import Student
-from .utils import check_student_quizzes
+from .utils import check_student_quizzes, filter_student_courses
 from admin_platform.models import Quiz
 from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz, \
     StudentSingleArticle
@@ -13,12 +13,18 @@ from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSer
     StudentQuizSerializer, GetAllArticlesSerializer, StudentSingleSerializer
 from rest_framework.permissions import IsAuthenticated
 from random import shuffle
+from django.db.models import Q
 
 
 class CourseAPIView(ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
+
+    # def get_queryset(self):
+    #     student = Student.objects.get(user=self.request.user)
+    #     student_courses = StudentCourse.objects.filter(student=student).values_list('course__slug', flat=True)
+    #     return Course.objects.exclude(slug__in=student_courses)
 
 
 class LessonAPIView(ListAPIView):
