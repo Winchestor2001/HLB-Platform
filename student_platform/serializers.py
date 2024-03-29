@@ -7,12 +7,6 @@ from click_payment.serializers import PaymentInvoiceSerializer
 from .models import StudentCourse, StudentLesson, StudentArticle, StudentQuiz, StudentSingleArticle
 from admin_platform.models import Course, Lesson, Article, Quiz
 from .utils import filter_student_lessons
-from rest_framework.reverse import reverse
-from environs import Env
-from rest_framework.response import Response
-
-env = Env()
-env.read_env()
 
 
 class ArticleSerializer(ModelSerializer):
@@ -69,46 +63,27 @@ class StudentAddCourseSerializer(ModelSerializer):
     def create(self, validated_data):
         student = validated_data['student']
         course = validated_data['course']
-        student_course = Course.objects.get(id=course.pk)
-        if student_course.paid:
-            payment_data = PaymentInvoice.objects.create(
-                payer=student, service=student_course.pk, type="course", amount=student_course.price
+        
+        lessons = Lesson.objects.filter(course=course)
+        for lesson in lessons:
+            StudentLesson.objects.create(
+                lesson=lesson, student=student, course=course
             )
-            payment_data = PaymentInvoiceSerializer(instance=payment_data)
 
-            response_data = {
-                'success': True,
-                'message': 'Invoice created successfully.',
-                'invoice': self.create_invoice(payment_data.data)
-            }
-            return Response(response_data, status=status.HTTP_201_CREATED)
-        else:
-            lessons = Lesson.objects.filter(course=course)
-            for lesson in lessons:
-                StudentLesson.objects.create(
-                    lesson=lesson, student=student, course=course
+            articles = Article.objects.filter(lesson=lesson)
+
+            for article in articles:
+                if article.number == 1 and lesson.number == 1:
+                    lock = False
+                else:
+                    lock = True
+
+                StudentArticle.objects.create(
+                    lesson=lesson, student=student, lock=lock, article=article
                 )
 
-                articles = Article.objects.filter(lesson=lesson)
-
-                for article in articles:
-                    if article.number == 1 and article.lesson.number == 1:
-                        lock = False
-                    else:
-                        lock = True
-
-                    StudentArticle.objects.create(
-                        lesson=lesson, student=student, lock=lock, article=article
-                    )
-
-            return super(StudentAddCourseSerializer, self).create(validated_data)
-
-    def create_invoice(self, data):
-                url = (f"https://my.click.uz/services/pay?service_id={env.str('CLICK_SERVICE_ID')}"
-                    f"&merchant_id={env.str('CLICK_MERCHANT_ID')}&amount={data.get('amount')}"
-                    f"&transaction_param={data.get('id')}"
-                    f"&return_url={reverse('status_invoice', request=self.context.get('request'))}")
-                return url
+        return super(StudentAddCourseSerializer, self).create(validated_data)
+        
 
 class StudentCoursesSerializer(ModelSerializer):
     class Meta:

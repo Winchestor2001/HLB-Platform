@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from accounts.models import Student
+from click_payment.models import PaymentInvoice
+from click_payment.serializers import PaymentInvoiceSerializer
 from .utils import check_student_quizzes, filter_student_courses
 from admin_platform.models import Quiz
 from .models import Course, Lesson, StudentCourse, StudentLesson, Article, StudentArticle, StudentQuiz, \
@@ -14,6 +16,11 @@ from .serializers import CourseSerializer, LessonSerializer, StudentAddCourseSer
 from rest_framework.permissions import IsAuthenticated
 from random import shuffle
 from django.db.models import Q
+from environs import Env
+from rest_framework.reverse import reverse
+
+env = Env()
+env.read_env()
 
 
 class CourseAPIView(ListAPIView):
@@ -36,11 +43,40 @@ class LessonAPIView(ListAPIView):
         return Lesson.objects.filter(course__slug=course_id)
 
 
-class StudentAddCourseView(CreateAPIView):
-    queryset = StudentCourse
-    serializer_class = StudentAddCourseSerializer
+class StudentAddCourseView(APIView):
     permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        student = Student.objects.get(id=request.data['student'])
+        course_slug = request.data['course']
+        student_course = Course.objects.get(slug=course_slug)
 
+        if student_course.paid:
+            payment_data = PaymentInvoice.objects.create(
+                payer=student, service=student_course.pk, type="course", amount=student_course.price
+            )
+            payment_data_serializer = PaymentInvoiceSerializer(instance=payment_data)
+
+            response_data = {
+                'success': True,
+                'message': 'Invoice created successfully.',
+                'invoice': self.create_invoice(request, payment_data_serializer.data)
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            serializer = StudentAddCourseSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def create_invoice(self, request, data):
+        url = (
+            f"https://my.click.uz/services/pay?service_id={env.str('CLICK_SERVICE_ID')}"
+            f"&merchant_id={env.str('CLICK_MERCHANT_ID')}&amount={data.get('amount')}"
+            f"&transaction_param={data.get('id')}"
+            f"&return_url={reverse('status_invoice', request=request)}"
+        )
+        return url
+    
 
 class StudentCoursesView(ListAPIView):
     permission_classes = [IsAuthenticated]
