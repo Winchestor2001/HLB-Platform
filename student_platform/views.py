@@ -59,7 +59,10 @@ class StudentAddCourseView(APIView):
             response_data = {
                 'success': True,
                 'message': 'Invoice created successfully.',
-                'invoice': self.create_invoice(request, payment_data_serializer.data)
+                'invoice': self.create_invoice(request, payment_data_serializer.data),
+                'course_name': student_course.title,
+                'course_price': student_course.price,
+                'is_certificate': student_course.certification,
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:

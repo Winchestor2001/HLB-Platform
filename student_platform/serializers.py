@@ -97,8 +97,8 @@ class StudentCoursesSerializer(ModelSerializer):
         total_articles = 0
         for lesson in lessons:
             total_articles += StudentArticle.objects.filter(lesson=lesson.lesson).count()
-
-        return finished_articles * 100 // total_articles
+        
+        return finished_articles * 100 // total_articles if total_articles else 0
 
     def to_representation(self, instance):
         request = self.context.get('request')

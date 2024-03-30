@@ -14,6 +14,7 @@ class PaymentInvoice(models.Model):
     service = models.IntegerField(blank=True, null=True)
     type = models.CharField(max_length=50, choices=TYPES, blank=True, null=True)
     amount = models.BigIntegerField()
+    paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
