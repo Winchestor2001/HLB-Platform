@@ -170,6 +170,32 @@ class StudentAddSingleArticleAPIView(CreateAPIView):
     serializer_class = StudentSingleSerializer
     permission_classes = [IsAuthenticated]
 
+    def post(self, request, *args, **kwargs):
+        student = Student.objects.get(id=request.data['student'])
+        article_slug = request.data['article_slug']
+        student_article = Article.objects.get(slug=article_slug)
+
+        if student_article.paid:
+            payment_data = PaymentInvoice.objects.create(
+                payer=student, service=student_article.pk, type="course", amount=student_article.price
+            )
+            payment_data_serializer = PaymentInvoiceSerializer(instance=payment_data)
+
+            response_data = {
+                'success': True,
+                'message': 'Invoice created successfully.',
+                'invoice': self.create_invoice(request, payment_data_serializer.data),
+                'course_name': student_article.title,
+                'course_price': student_article.price,
+                'is_certificate': None,
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            serializer = StudentSingleSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class StudentSingleArticleAPIView(ListAPIView):
     serializer_class = StudentSingleSerializer

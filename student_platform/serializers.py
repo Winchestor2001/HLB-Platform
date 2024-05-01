@@ -204,8 +204,8 @@ class StudentSingleSerializer(ModelSerializer):
         article = Article.objects.get(id=validated_data['article'].id)
         single_articles = StudentSingleArticle.objects.filter(article=article).exists()
         if not single_articles:
-            if not article.paid:
-                validated_data['paid'] = True
+            # if not article.paid:
+            #     validated_data['paid'] = True
             return super(StudentSingleSerializer, self).create(validated_data)
         else:
             res = serializers.ValidationError()

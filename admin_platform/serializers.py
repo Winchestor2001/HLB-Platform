@@ -68,7 +68,7 @@ class GetQuizSerializer(ModelSerializer):
 class GetArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
-        fields = ['id', 'slug', 'title', 'file']
+        fields = ['id', 'slug', 'title', 'file', 'price', 'paid']
 
     def to_representation(self, instance):
         data = super(GetArticleSerializer, self).to_representation(instance)
@@ -92,6 +92,7 @@ class AddArticleSerializer(ModelSerializer):
 
         slug = slugify(validated_data['title'])
         validated_data['slug'] = slug
+        print(validated_data)
         article = Article.objects.create(**validated_data)
         article.read_time = calculate_reading_time(f"media/{article.file}")
         article.save()
